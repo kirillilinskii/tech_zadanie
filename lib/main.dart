@@ -12,42 +12,33 @@ class MyApp extends StatelessWidget {
       home: Builder(
         builder: (context) => Scaffold(
           body: Center(
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Page2();
-                    },
+            child: Stack(
+              alignment: AlignmentDirectional.bottomEnd,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _pressed(context);
+                  },
+                  child: CircleAvatar(
+                    radius: 100,
+                    backgroundImage: NetworkImage(
+                        'https://www.horizont.net/news/media/23/Joko-Winterscheidt-220837-detailnp.png'),
                   ),
-                );
-              },
-              child: Stack(
-                alignment: AlignmentDirectional.bottomEnd,
-                children: [
-                  Container(
-                    height: 200,
-                    width: 200,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://www.horizont.net/news/media/23/Joko-Winterscheidt-220837-detailnp.png'),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _pressed(context);
+                  },
+                  child: CircleAvatar(
+                    radius: 30,
+                    child: Icon(
+                      Icons.add_a_photo,
+                      color: Colors.white,
+                      size: 25,
                     ),
                   ),
-                  Container(
-                    height: 55,
-                    width: 55,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: Icon(
-                        Icons.add_a_photo,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -73,3 +64,25 @@ class Page2 extends StatelessWidget {
     );
   }
 }
+
+void _pressed(context) {
+  var builder = PageRouteBuilder(pageBuilder: (BuildContext context,
+      Animation animation, Animation secondaryAnimation) {
+    return Page2();
+  }, transitionsBuilder: (
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return new SlideTransition(
+      position: new Tween<Offset>(
+        begin: const Offset(0.0, 1.0),
+        end: Offset.zero,
+      ).animate(animation),
+      child: child,
+    );
+  });
+  Navigator.of(context).push(builder);
+}
+
